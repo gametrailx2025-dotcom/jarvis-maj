@@ -1,0 +1,48 @@
+# GitHub fabrique l'appli iPhone de JARVIS sur un Mac de GitHub (gratuit pour un dépôt public).
+# Résultat : la release « JARVIS iPhone » avec JARVIS-iPhone.ipa, à installer avec Sideloadly (Windows).
+name: App iPhone
+on:
+  workflow_dispatch:
+  push:
+    paths: ["JarvisApp/**", ".github/workflows/iphone.yml"]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Projet Xcode
+        run: |
+          brew install xcodegen
+          cd JarvisApp && xcodegen generate
+      - name: Compiler (sans signature, Sideloadly signera)
+        run: |
+          cd JarvisApp
+          if ! xcodebuild -project JarvisApp.xcodeproj -target Jarvis -configuration Release -sdk iphoneos \
+               SYMROOT="$PWD/build" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+               build > build.log 2>&1; then
+            echo "===== ERREURS (copie tout ce bloc pour Claude) ====="
+            grep -E "error:" build.log | sort -u | head -80
+            echo "===== FIN ====="
+            exit 1
+          fi
+          grep -E "BUILD SUCCEEDED" build.log
+      - name: Fabriquer le .ipa
+        run: |
+          cd JarvisApp
+          APP=$(find build -path "*Release-iphoneos*" -name "*.app" -maxdepth 3 | head -1)
+          test -n "$APP"
+          mkdir -p Payload && cp -R "$APP" Payload/
+          zip -qry ../JARVIS-iPhone.ipa Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JARVIS-iPhone
+          path: JARVIS-iPhone.ipa
+      - name: Publier (release « iphone », sans toucher aux mises à jour de JARVIS)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete iphone -y --cleanup-tag || true
+          gh release create iphone JARVIS-iPhone.ipa --title "JARVIS iPhone" --latest=false \
+            --notes "Appli iPhone de JARVIS. À installer avec Sideloadly (Windows), puis à relier au PC (code à 6 chiffres)."
