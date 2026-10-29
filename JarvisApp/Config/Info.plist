@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Localisation pour la météo (iPhone et Mac). -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>JARVIS utilise votre position pour vous donner la météo de l'endroit où vous êtes.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>JARVIS utilise votre position pour vous donner la météo de l'endroit où vous êtes.</string>
+	<!-- Mac : réglage du volume (commandes système). -->
+	<key>NSAppleEventsUsageDescription</key>
+	<string>JARVIS règle le volume et contrôle vos applications à votre demande.</string>
+	<!-- Mac : accès à vos fichiers, uniquement quand vous le demandez (recherche, ouverture, résumé). -->
+	<key>NSDownloadsFolderUsageDescription</key>
+	<string>JARVIS lit vos téléchargements quand vous lui demandez de chercher, ouvrir ou résumer un fichier.</string>
+	<key>NSDesktopFolderUsageDescription</key>
+	<string>JARVIS lit votre bureau quand vous lui demandez de chercher, ouvrir ou résumer un fichier.</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>JARVIS lit vos documents quand vous lui demandez de chercher, ouvrir ou résumer un fichier.</string>
+	<!-- Trouver le PC JARVIS sur le Wi-Fi (Bonjour). -->
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_jarvis._tcp</string>
+	</array>
+	<!-- Autorise les connexions HTTP vers le réseau local (JARVIS sur le PC, Ollama). -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	<key>GCSupportsGameMode</key>
+	<false/>
+</dict>
+</plist>
