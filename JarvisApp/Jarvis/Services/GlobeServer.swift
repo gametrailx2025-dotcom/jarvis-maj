@@ -11,9 +11,9 @@ final class GlobeServer: ObservableObject {
         case idle, installing, starting, ready, unavailable(String), failed(String)
     }
 
-    static let port = 4173
+    nonisolated static let port = 4173
     /// Mac : le globe tourne sur le Mac. iPhone : c'est le PC qui le fait tourner, affiché par le Wi-Fi.
-    static var url: URL {
+    nonisolated static var url: URL {
         #if os(macOS)
         return URL(string: "http://127.0.0.1:\(port)/")!
         #else
